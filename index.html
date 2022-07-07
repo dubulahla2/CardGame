@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    
+</head>
+
+<body>
+    <div>
+        <div x-data="{
+             deckId:'d1px0hyroh74',
+             remaining : 0,
+             cards: [], 
+             loadDeck(){
+              
+              const createDeckUrl = 'https://www.deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1';
+
+                  axios
+                  .get(createDeckUrl)
+                  .then((result) => {
+                    
+                      this.deckId = result.data.deck_id;
+                      this.remaining = result.data.remaining;
+                  });
+            },
+            draw5Cards(){
+                alert('Draw 5 Cards')
+                const drawCardsUrl ='https://www.deckofcardsapi.com/api/deck/' + this.deckId + '/draw/?count=8';
+
+                axios
+                   .get(drawCardsUrl)
+                   .then((result) => {
+                      this.cards = result.data.cards;
+                      this.remaining = result.data.remaining;
+
+                   });
+            },
+            shuffle(){
+                const shuffleUrl ='https://deckofcardsapi.com/api/deck/' + this.deckId + '/shuffle/'
+                axios
+                   .get(shuffleUrl)
+                   .then((result) => {
+                      this.cards = result.data.cards;
+                      this.remaining = result.data.remaining;
+
+                });
+            }
+
+            }">
+            <label for="">Deck Id:</label>
+            <span x-text="deckId"></span>
+            <button x-on:click="loadDeck()">load Deck </button>
+            <button x-on:click="draw5Cards()">load 5 Cards</button>
+            <button x-on:click="shuffle()">shuffle</button>
+
+               <div>
+                  <h2> Cards Drawn</h2>
+                  <div>
+                    Cards remaining : <span x-text ="remaining"></span>
+                  </div>
+                  <template x-for="card in cards">
+                    <!-- <div x-text="card.image"></div> -->
+                    <img x-bind:src = "card.image" alt ="" height="150">
+                  </template>
+              </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
